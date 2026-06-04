@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="Abdullah Bin Taleb – Computer Science Student interested in Data Science, AI, and Software Development"/>
+  <title>Abdullah Bin Taleb</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --white:   #ffffff;
+      --bg:      #f7f7f7;
+      --border:  #e5e7eb;
+      --border2: #d1d5db;
+      --text:    #0f0f0f;
+      --sub:     #6b7280;
+      --muted:   #9ca3af;
+      --r:       16px;
+      --t:       .26s ease;
+      --shadow:  0 4px 24px rgba(0,0,0,.06);
+      --shadow-h:0 10px 40px rgba(0,0,0,.10);
+    }
+
+    html, body { height: 100%; font-family: 'Manrope', system-ui, sans-serif; background: var(--white); color: var(--text); overflow-x: hidden; }
+
+    /* ─── CODE BACKGROUND (shared layer) ─────────────────────── */
+    #code-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+      pointer-events: none;
+      background: var(--white);
+    }
+
+    .code-row {
+      position: absolute;
+      white-space: nowrap;
+      font-family: 'Manrope', monospace;
+      font-size: 12.5px;
+      font-weight: 500;
+      color: #bababa;
+      opacity: 0.45;
+      letter-spacing: .025em;
+      will-change: transform;
+      animation: ticker linear infinite;
+    }
+
+    @keyframes ticker {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    /* ─── PAGES ───────────────────────────────────────────────── */
+    .page {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ─── HOME ────────────────────────────────────────────────── */
+    #home-page { display: flex; }
+
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 80px 24px 60px;
+      text-align: center;
+    }
+
+    /* Avatar ring */
+    .avatar {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      border: 1.5px solid var(--border2);
+      background: var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--sub);
+      margin-bottom: 28px;
+      letter-spacing: -.02em;
+      opacity: 0;
+      animation: fadeUp .5s .05s forwards;
+    }
+
+    h1 {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 800;
+      letter-spacing: -.035em;
+      line-height: 1.08;
+      color: var(--text);
+      margin-bottom: 12px;
+      opacity: 0;
+      animation: fadeUp .5s .12s forwards;
+    }
+
+    .role {
+      font-size: clamp(.88rem, 1.6vw, 1rem);
+      font-weight: 500;
+      color: var(--sub);
+      margin-bottom: 12px;
+      opacity: 0;
+      animation: fadeUp .5s .2s forwards;
+    }
+
+    .tagline {
+      font-size: clamp(.82rem, 1.5vw, .92rem);
+      font-weight: 400;
+      color: var(--muted);
+      max-width: 420px;
+      line-height: 1.75;
+      margin-bottom: 56px;
+      opacity: 0;
+      animation: fadeUp .5s .28s forwards;
+    }
+
+    /* ─── CARDS ───────────────────────────────────────────────── */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      width: 100%;
+      max-width: 860px;
+      opacity: 0;
+      animation: fadeUp .6s .38s forwards;
+    }
+
+    .card {
+      background: rgba(255,255,255,.92);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 28px 24px 24px;
+      cursor: pointer;
+      text-align: left;
+      position: relative;
+      overflow: hidden;
+      transition: box-shadow var(--t), border-color var(--t), transform var(--t), background var(--t);
+      outline: none;
+      backdrop-filter: blur(6px);
+    }
+
+    .card:hover {
+      box-shadow: var(--shadow-h);
+      border-color: var(--border2);
+      transform: translateY(-4px);
+      background: rgba(255,255,255,.98);
+    }
+
+    /* Thin top line slide-in */
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1.5px;
+      background: var(--text);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform .32s ease;
+    }
+    .card:hover::before { transform: scaleX(1); }
+
+    .card:focus-visible { outline: 2px solid var(--text); outline-offset: 3px; }
+
+    .card-icon {
+      width: 40px; height: 40px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--bg);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.05rem;
+      margin-bottom: 20px;
+      transition: border-color var(--t);
+    }
+    .card:hover .card-icon { border-color: var(--border2); }
+
+    .card-label {
+      font-size: .62rem;
+      font-weight: 700;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+      color: var(--muted);
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .card-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: -.02em;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    .card-desc {
+      font-size: .83rem;
+      color: var(--sub);
+      line-height: 1.72;
+      margin-bottom: 22px;
+      font-weight: 400;
+    }
+
+    .card-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: .78rem;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -.01em;
+    }
+
+    .cta-arrow { transition: transform var(--t); display: inline-block; }
+    .card:hover .cta-arrow { transform: translateX(4px); }
+
+    /* ─── FOOTER ──────────────────────────────────────────────── */
+    footer {
+      text-align: center;
+      padding: 24px;
+      font-size: .72rem;
+      font-weight: 500;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+    }
+
+    /* ─── PROJECTS PAGE ───────────────────────────────────────── */
+    #projects-page {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 10;
+      overflow-y: auto;
+      background: transparent; /* shows code-bg through */
+    }
+    #projects-page.open { display: block; }
+
+    /* White content wrapper so text is readable over code-bg */
+    .projects-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 52px 28px 96px;
+    }
+
+    /* Frosted white sheet behind content */
+    .projects-inner::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: rgba(255,255,255,.82);
+      backdrop-filter: blur(2px);
+      z-index: -1;
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: inherit;
+      font-size: .8rem;
+      font-weight: 600;
+      color: var(--sub);
+      background: rgba(255,255,255,.9);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 9px 16px;
+      cursor: pointer;
+      margin-bottom: 48px;
+      transition: color var(--t), border-color var(--t), background var(--t);
+    }
+    .back-btn:hover { color: var(--text); border-color: var(--border2); background: #fff; }
+
+    .pg-heading {
+      font-size: clamp(1.5rem, 4vw, 2.2rem);
+      font-weight: 800;
+      letter-spacing: -.03em;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .pg-sub {
+      font-size: .88rem;
+      color: var(--sub);
+      margin-bottom: 40px;
+      font-weight: 400;
+    }
+
+    .proj-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(268px, 1fr));
+      gap: 16px;
+    }
+
+    .proj-card {
+      background: rgba(255,255,255,.95);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 24px 20px 20px;
+      transition: box-shadow var(--t), transform var(--t), border-color var(--t);
+      cursor: default;
+    }
+    .proj-card:hover {
+      box-shadow: var(--shadow-h);
+      transform: translateY(-3px);
+      border-color: var(--border2);
+    }
+
+    .proj-icon {
+      width: 38px; height: 38px;
+      border-radius: 9px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+      margin-bottom: 16px;
+    }
+
+    .proj-title {
+      font-size: .98rem;
+      font-weight: 700;
+      letter-spacing: -.018em;
+      color: var(--text);
+      margin-bottom: 7px;
+    }
+
+    .proj-desc {
+      font-size: .82rem;
+      color: var(--sub);
+      line-height: 1.7;
+      margin-bottom: 14px;
+    }
+
+    .proj-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 18px; }
+
+    .proj-tag {
+      font-size: .68rem;
+      font-weight: 600;
+      padding: 3px 9px;
+      border-radius: 5px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--sub);
+    }
+
+    .view-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: inherit;
+      font-size: .78rem;
+      font-weight: 700;
+      color: var(--text);
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 14px;
+      cursor: pointer;
+      transition: background var(--t), border-color var(--t);
+    }
+    .view-btn:hover { background: #efefef; border-color: var(--border2); }
+
+    /* ─── DETAILS MODAL ───────────────────────────────────────── */
+    #detail-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 300;
+      background: rgba(0,0,0,.22);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    #detail-modal.open { display: flex; }
+
+    .detail-box {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 40px;
+      max-width: 560px;
+      width: 100%;
+      max-height: 86vh;
+      overflow-y: auto;
+      box-shadow: 0 32px 80px rgba(0,0,0,.14);
+      animation: modalIn .28s cubic-bezier(.34,1.3,.64,1) forwards;
+    }
+
+    @keyframes modalIn {
+      from { opacity: 0; transform: scale(.94) translateY(12px); }
+      to   { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .detail-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 6px;
+    }
+
+    .detail-icon {
+      width: 46px; height: 46px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem;
+      margin-bottom: 16px;
+    }
+
+    .detail-close {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--sub);
+      font-size: .95rem;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-family: inherit;
+      transition: background var(--t), color var(--t);
+      flex-shrink: 0;
+    }
+    .detail-close:hover { background: #efefef; color: var(--text); }
+
+    .detail-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      letter-spacing: -.025em;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .detail-subtitle {
+      font-size: .82rem;
+      color: var(--muted);
+      font-weight: 500;
+      margin-bottom: 28px;
+    }
+
+    .detail-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 20px 0;
+    }
+
+    .detail-section-title {
+      font-size: .65rem;
+      font-weight: 700;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .detail-body {
+      font-size: .875rem;
+      color: var(--sub);
+      line-height: 1.76;
+      font-weight: 400;
+    }
+
+    .detail-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+
+    .detail-tag {
+      font-size: .72rem;
+      font-weight: 600;
+      padding: 4px 11px;
+      border-radius: 6px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--sub);
+    }
+
+    .learning-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .learning-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 9px;
+      font-size: .875rem;
+      color: var(--sub);
+      line-height: 1.6;
+    }
+
+    .learning-list li::before {
+      content: '→';
+      color: var(--muted);
+      font-size: .8rem;
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+
+    /* ─── CONTACT MODAL ───────────────────────────────────────── */
+    #contact-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      background: rgba(0,0,0,.22);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    #contact-modal.open { display: flex; }
+
+    .contact-box {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 38px;
+      max-width: 400px;
+      width: 100%;
+      box-shadow: 0 24px 64px rgba(0,0,0,.11);
+      animation: modalIn .28s cubic-bezier(.34,1.3,.64,1) forwards;
+    }
+
+    .contact-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .contact-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: -.025em;
+      color: var(--text);
+    }
+
+    .contact-sub {
+      font-size: .82rem;
+      color: var(--muted);
+      margin-bottom: 26px;
+    }
+
+    .contact-list { display: flex; flex-direction: column; gap: 9px; }
+
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      padding: 13px 15px;
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      text-decoration: none;
+      color: var(--text);
+      background: var(--white);
+      transition: background var(--t), border-color var(--t), transform var(--t);
+    }
+    .contact-item:hover { background: var(--bg); border-color: var(--border2); transform: translateX(3px); }
+
+    .c-icon {
+      width: 36px; height: 36px;
+      border-radius: 9px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      display: flex; align-items: center; justify-content: center;
+      font-size: .95rem;
+      flex-shrink: 0;
+    }
+
+    .c-info { display: flex; flex-direction: column; }
+    .c-label { font-size: .62rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .1em; margin-bottom: 2px; }
+    .c-value { font-size: .85rem; font-weight: 600; color: var(--text); }
+
+    /* ─── SHARED CLOSE BUTTON ─────────────────────────────────── */
+    .modal-close {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--sub);
+      font-size: .95rem;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-family: inherit;
+      transition: background var(--t), color var(--t);
+    }
+    .modal-close:hover { background: #efefef; color: var(--text); }
+
+    /* ─── ANIMATIONS ──────────────────────────────────────────── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ─── RESPONSIVE ──────────────────────────────────────────── */
+    @media (max-width: 660px) {
+      .cards { grid-template-columns: 1fr; max-width: 320px; }
+    }
+    @media (min-width: 661px) and (max-width: 840px) {
+      .cards { grid-template-columns: repeat(2, 1fr); }
+      .card:last-child { grid-column: span 2; max-width: 320px; justify-self: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════
+     SHARED CODE BACKGROUND — fixed, behind everything
+═════════════════════════════════════════════════════════ -->
+<div id="code-bg" aria-hidden="true"></div>
+
+<!-- ═══════════════════════════════════════════════════════
+     HOME PAGE
+═════════════════════════════════════════════════════════ -->
+<div class="page" id="home-page">
+  <main>
+
+    <div class="avatar" aria-hidden="true">AB</div>
+
+    <h1>Abdullah Bin Taleb</h1>
+    <p class="role">Computer Science Student</p>
+    <p class="tagline">Interested in Data Science, Artificial Intelligence,<br>and Software Development</p>
+
+    <div class="cards" role="list">
+
+      <!-- Projects -->
+      <div class="card" role="listitem" tabindex="0"
+           aria-label="View My Projects"
+           onclick="openProjects()"
+           onkeydown="if(event.key==='Enter'||event.key===' ')openProjects()">
+        <div class="card-icon" aria-hidden="true">⌨️</div>
+        <span class="card-label">Work</span>
+        <h2 class="card-title">My Projects</h2>
+        <p class="card-desc">Data science systems, AI tools, and software projects built through coursework and hands-on experience.</p>
+        <div class="card-cta">View projects <span class="cta-arrow">→</span></div>
+      </div>
+
+      <!-- Resume -->
+      <div class="card" role="listitem" tabindex="0"
+           aria-label="Open Resume"
+           onclick="openResume()"
+           onkeydown="if(event.key==='Enter'||event.key===' ')openResume()">
+        <div class="card-icon" aria-hidden="true">📄</div>
+        <span class="card-label">Career</span>
+        <h2 class="card-title">Resume</h2>
+        <p class="card-desc">My full professional resume covering skills, experience, education, and certifications.</p>
+        <div class="card-cta">Open PDF <span class="cta-arrow">↗</span></div>
+      </div>
+
+      <!-- Contact -->
+      <div class="card" role="listitem" tabindex="0"
+           aria-label="Contact Me"
+           onclick="openContact()"
+           onkeydown="if(event.key==='Enter'||event.key===' ')openContact()">
+        <div class="card-icon" aria-hidden="true">✉️</div>
+        <span class="card-label">Connect</span>
+        <h2 class="card-title">Contact</h2>
+        <p class="card-desc">Reach out via email, phone, or LinkedIn. Open to opportunities and collaborations.</p>
+        <div class="card-cta">Get in touch <span class="cta-arrow">→</span></div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer>© 2026 Abdullah Bin Taleb</footer>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     PROJECTS PAGE
+═════════════════════════════════════════════════════════ -->
+<div id="projects-page" role="dialog" aria-modal="true" aria-label="Projects">
+  <div class="projects-inner">
+
+    <button class="back-btn" onclick="closeProjects()" aria-label="Back to home">← Back</button>
+
+    <h2 class="pg-heading">Projects</h2>
+    <p class="pg-sub">Selected academic and professional work — focused on learning outcomes and applied skills.</p>
+
+    <div class="proj-grid">
+
+      <!-- P1 -->
+      <article class="proj-card">
+        <div class="proj-icon">🎭</div>
+        <h3 class="proj-title">AI Face Recognition Attendance System</h3>
+        <p class="proj-desc">Automated attendance tracking using computer vision and facial recognition — eliminating manual check-ins.</p>
+        <div class="proj-tags">
+          <span class="proj-tag">Python</span>
+          <span class="proj-tag">OpenCV</span>
+          <span class="proj-tag">Computer Vision</span>
+        </div>
+        <button class="view-btn" onclick="openDetail('face')">View Details →</button>
+      </article>
+
+      <!-- P2 -->
+      <article class="proj-card">
+        <div class="proj-icon">📊</div>
+        <h3 class="proj-title">Executive Power BI Dashboards</h3>
+        <p class="proj-desc">Interactive dashboards built during internship to help leadership visualize KPIs and make data-driven decisions.</p>
+        <div class="proj-tags">
+          <span class="proj-tag">Power BI</span>
+          <span class="proj-tag">SQL</span>
+          <span class="proj-tag">Excel</span>
+        </div>
+        <button class="view-btn" onclick="openDetail('powerbi')">View Details →</button>
+      </article>
+
+      <!-- P3 -->
+      <article class="proj-card">
+        <div class="proj-icon">🤖</div>
+        <h3 class="proj-title">Student Schedule Chatbot</h3>
+        <p class="proj-desc">Conversational chatbot allowing students to query their schedules and attendance records automatically.</p>
+        <div class="proj-tags">
+          <span class="proj-tag">Python</span>
+          <span class="proj-tag">AI Logic</span>
+          <span class="proj-tag">Automation</span>
+        </div>
+        <button class="view-btn" onclick="openDetail('chatbot')">View Details →</button>
+      </article>
+
+      <!-- P4 -->
+      <article class="proj-card">
+        <div class="proj-icon">🍽️</div>
+        <h3 class="proj-title">Restaurant Management System</h3>
+        <p class="proj-desc">Full restaurant management system built in C++ with efficient data structures for orders, inventory, and billing.</p>
+        <div class="proj-tags">
+          <span class="proj-tag">C++</span>
+          <span class="proj-tag">Data Structures</span>
+          <span class="proj-tag">OOP</span>
+        </div>
+        <button class="view-btn" onclick="openDetail('restaurant')">View Details →</button>
+      </article>
+
+      <!-- P5 -->
+      <article class="proj-card">
+        <div class="proj-icon">🤖</div>
+        <h3 class="proj-title">AI Line-Following Robot</h3>
+        <p class="proj-desc">Autonomous robot integrating sensor arrays with AI navigation logic for real-time path detection and correction.</p>
+        <div class="proj-tags">
+          <span class="proj-tag">Embedded Systems</span>
+          <span class="proj-tag">AI Logic</span>
+          <span class="proj-tag">Robotics</span>
+        </div>
+        <button class="view-btn" onclick="openDetail('robot')">View Details →</button>
+      </article>
+
+      <!-- P6 -->
+      <article class="proj-card">
+        <div class="proj-icon">🧹</div>
+        <h3 class="proj-title">EDA & Data Cleaning Pipeline</h3>
+        <p class="proj-desc">Exploratory data analysis and cleaning on real-world datasets at Personalis using Python and R Studio.</p>
+        <div class="proj-tags">
+          <span class="proj-tag">Python</span>
+          <span class="proj-tag">R Studio</span>
+          <span class="proj-tag">Pandas</span>
+          <span class="proj-tag">Matplotlib</span>
+        </div>
+        <button class="view-btn" onclick="openDetail('eda')">View Details →</button>
+      </article>
+
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     PROJECT DETAIL MODAL
+═════════════════════════════════════════════════════════ -->
+<div id="detail-modal" role="dialog" aria-modal="true" aria-label="Project Details"
+     onclick="if(event.target===this)closeDetail()">
+  <div class="detail-box" id="detail-content"></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     CONTACT MODAL
+═════════════════════════════════════════════════════════ -->
+<div id="contact-modal" role="dialog" aria-modal="true" aria-label="Contact"
+     onclick="if(event.target===this)closeContact()">
+  <div class="contact-box">
+    <div class="contact-header">
+      <h2 class="contact-title">Get in Touch</h2>
+      <button class="modal-close" onclick="closeContact()" aria-label="Close">✕</button>
+    </div>
+    <p class="contact-sub">Open to opportunities and collaborations.</p>
+    <div class="contact-list">
+      <a href="mailto:Abdullahbintaleb7@gmail.com" class="contact-item">
+        <div class="c-icon">📧</div>
+        <div class="c-info">
+          <span class="c-label">Email</span>
+          <span class="c-value">Abdullahbintaleb7@gmail.com</span>
+        </div>
+      </a>
+      <a href="tel:+966537227322" class="contact-item">
+        <div class="c-icon">📞</div>
+        <div class="c-info">
+          <span class="c-label">Phone</span>
+          <span class="c-value">(+966) 537 227 322</span>
+        </div>
+      </a>
+      <a href="https://www.linkedin.com/in/abdullah-bin-taleb" target="_blank" rel="noopener noreferrer" class="contact-item">
+        <div class="c-icon">💼</div>
+        <div class="c-info">
+          <span class="c-label">LinkedIn</span>
+          <span class="c-value">linkedin.com/in/abdullah-bin-taleb</span>
+        </div>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     SCRIPTS
+═════════════════════════════════════════════════════════ -->
+<script>
+/* ── Code background ─────────────────────────────────────────── */
+(function () {
+  const snippets = [
+    '#include <iostream>',    'std::vector<int>',       'for(int i=0;i<n;i++)',
+    'auto& val : arr',        'std::cout << result',    'int main() {',
+    'return 0;',              'std::map<string,int>',   '#include <vector>',
+    'template<typename T>',   'nullptr',                'size_t len = v.size();',
+    'std::sort(v.begin())',   'struct Node { int val;', 'delete[] ptr;',
+
+    'import pandas as pd',    'import numpy as np',     'df.dropna()',
+    'df.groupby("col")',      'plt.show()',              'sns.heatmap(corr)',
+    'X_train, X_test =',      'model.fit(X, y)',         'accuracy_score(y)',
+    'pd.read_csv("data")',    'np.array([1,2,3])',      'from sklearn import',
+    'lambda x: x**2',        'list(map(f, data))',      'df.describe()',
+    'plt.figure(figsize=)',   'import matplotlib',       'StandardScaler()',
+
+    'ggplot(data, aes(x))',   'library(dplyr)',          'library(ggplot2)',
+    'mutate(col = val)',      'filter(score > 0)',        'summarise(avg=mean(x))',
+    'select(col1, col2)',     'group_by(category)',       'arrange(desc(n))',
+    'lm(y ~ x, data=df)',    'cor(x, y)',                'library(tidyr)',
+    'pivot_longer(cols)',     'inner_join(df1, df2)',     'read.csv("file")',
+  ];
+
+  const bg = document.getElementById('code-bg');
+  const rowH = 34;
+  const rows = Math.ceil(window.innerHeight / rowH) + 3;
+
+  for (let r = 0; r < rows; r++) {
+    const row = document.createElement('div');
+    row.className = 'code-row';
+    row.style.top = (r * rowH + 6) + 'px';
+
+    const dur = 55 + Math.random() * 55;
+    const delay = -(Math.random() * dur);
+    row.style.animationDuration = dur + 's';
+    row.style.animationDelay = delay + 's';
+
+    let text = '';
+    const count = Math.ceil((window.innerWidth * 2.8) / 13);
+    for (let i = 0; i < count; i++) text += snippets[Math.floor(Math.random() * snippets.length)] + '   ·   ';
+    row.textContent = text + text;
+    bg.appendChild(row);
+  }
+})();
+
+/* ── Project data ────────────────────────────────────────────── */
+const projects = {
+  face: {
+    icon: '🎭',
+    title: 'AI Face Recognition Attendance System',
+    type: 'AI & Computer Vision',
+    overview: 'An automated attendance system developed during the work-study program at Personalis that uses facial recognition to identify individuals and log their attendance in real time — completely replacing the manual check-in process.',
+    tech: ['Python', 'OpenCV', 'face_recognition', 'NumPy', 'CSV / Database'],
+    features: [
+      'Real-time face detection and recognition via webcam',
+      'Automated attendance logging with timestamps',
+      'Duplicate entry prevention within a session',
+      'Simple enrollment interface for adding new faces',
+    ],
+    challenges: 'Handling varying lighting conditions and partial occlusions was the main challenge. Fine-tuning detection thresholds to minimize false positives while maintaining speed required careful experimentation.',
+    learnings: [
+      'Computer Vision fundamentals and face recognition pipelines',
+      'Working with real-time data streams in Python',
+      'Building practical AI systems beyond academic exercises',
+      'Debugging and performance optimization',
+    ],
+  },
+  powerbi: {
+    icon: '📊',
+    title: 'Executive Power BI Dashboards',
+    type: 'Data Analysis & Visualization',
+    overview: 'A suite of interactive Power BI dashboards built during my internship at Personalis to help leadership teams monitor organizational KPIs, spot trends, and make faster, evidence-based decisions.',
+    tech: ['Power BI', 'SQL', 'Microsoft Excel', 'DAX', 'Data Modeling'],
+    features: [
+      'Dynamic KPI tracking with drill-down capabilities',
+      'Custom DAX measures for calculated metrics',
+      'Automated data refresh connected to live data sources',
+      'Role-level security for different audience tiers',
+    ],
+    challenges: 'Translating abstract business questions into clear visual metrics required close collaboration with stakeholders. Structuring the data model efficiently to support complex DAX calculations was technically demanding.',
+    learnings: [
+      'Business Intelligence and dashboard design principles',
+      'SQL data querying and transformation',
+      'DAX formulas and Power BI data modeling',
+      'Communicating data insights to non-technical audiences',
+    ],
+  },
+  chatbot: {
+    icon: '🤖',
+    title: 'Student Schedule Chatbot',
+    type: 'AI & Automation',
+    overview: 'An automated chatbot system developed at Personalis that allows students to query their class schedules, attendance records, and academic information through a conversational text interface.',
+    tech: ['Python', 'AI Logic', 'NLP Concepts', 'Automation', 'Database'],
+    features: [
+      'Natural language query parsing for schedule requests',
+      'Attendance summary and absence tracking',
+      'Automated responses without human intervention',
+      'Extendable intent recognition architecture',
+    ],
+    challenges: 'Mapping diverse natural language inputs to structured database queries required designing a robust intent classification layer. Handling ambiguous or incomplete queries gracefully was a key design concern.',
+    learnings: [
+      'Conversational AI design and intent recognition',
+      'Connecting language interfaces to structured data',
+      'Automation and workflow thinking',
+      'User-centered system design',
+    ],
+  },
+  restaurant: {
+    icon: '🍽️',
+    title: 'Restaurant Management System',
+    type: 'Software Development',
+    overview: 'A fully functional restaurant management system built in C++ as an academic project, covering order processing, inventory tracking, staff management, and billing with an emphasis on efficient data handling.',
+    tech: ['C++', 'Object-Oriented Programming', 'Data Structures', 'File I/O'],
+    features: [
+      'Menu management and dynamic order processing',
+      'Inventory tracking with low-stock alerts',
+      'Bill generation with itemized receipts',
+      'Data persistence using file-based storage',
+    ],
+    challenges: 'Designing a scalable class hierarchy that cleanly separated concerns — while keeping memory management safe — required careful planning. Implementing efficient search and sort routines for large menus was also a focal point.',
+    learnings: [
+      'Object-Oriented Programming principles',
+      'Data structures selection and implementation',
+      'Memory management in C++',
+      'Software design and modular architecture',
+    ],
+  },
+  robot: {
+    icon: '🤖',
+    title: 'AI Line-Following Robot',
+    type: 'Robotics & Embedded Systems',
+    overview: 'An autonomous robot that uses an array of infrared sensors and AI-based decision logic to detect and follow a line on the ground in real time — built collaboratively as part of an academic engineering project.',
+    tech: ['Embedded Systems', 'AI Navigation Logic', 'Sensor Integration', 'C / Assembly'],
+    features: [
+      'Infrared sensor array for continuous path detection',
+      'Adaptive speed control based on curve sharpness',
+      'Error-correction logic to recover from path deviations',
+      'Calibration mode for different surface contrasts',
+    ],
+    challenges: 'Tuning sensor thresholds and control parameters to work reliably across different lighting conditions and surface materials required extensive iterative testing. Managing real-time response constraints within hardware limits was a core engineering challenge.',
+    learnings: [
+      'Embedded systems programming and hardware interfacing',
+      'Control systems and feedback loops',
+      'Collaborative engineering and team problem-solving',
+      'Translating algorithms into real-world physical behavior',
+    ],
+  },
+  eda: {
+    icon: '🧹',
+    title: 'EDA & Data Cleaning Pipeline',
+    type: 'Data Science',
+    overview: 'A data analysis pipeline developed during the internship at Personalis that cleaned, explored, and summarized real-world organizational datasets — transforming raw, messy data into reliable inputs for decision-making.',
+    tech: ['Python', 'R Studio', 'Pandas', 'NumPy', 'Matplotlib', 'ggplot2'],
+    features: [
+      'Automated detection and handling of missing values',
+      'Outlier identification using statistical methods',
+      'Distribution analysis and correlation mapping',
+      'Visualization reports for stakeholder review',
+    ],
+    challenges: 'Real-world data was inconsistent, poorly labeled, and contained domain-specific anomalies that required close collaboration with subject matter experts to resolve correctly without distorting results.',
+    learnings: [
+      'Data wrangling and cleaning best practices',
+      'Statistical analysis and distribution thinking',
+      'Data visualization for storytelling',
+      'Working with real, imperfect datasets in professional settings',
+    ],
+  },
+};
+
+/* ── Render detail modal ─────────────────────────────────────── */
+function openDetail(id) {
+  const p = projects[id];
+  if (!p) return;
+
+  const featuresHtml = p.features.map(f => `<li>${f}</li>`).join('');
+  const learningsHtml = p.learnings.map(l => `<li>${l}</li>`).join('');
+  const tagsHtml = p.tech.map(t => `<span class="detail-tag">${t}</span>`).join('');
+
+  document.getElementById('detail-content').innerHTML = `
+    <div class="detail-header">
+      <div></div>
+      <button class="detail-close" onclick="closeDetail()" aria-label="Close">✕</button>
+    </div>
+    <div class="detail-icon">${p.icon}</div>
+    <h3 class="detail-title">${p.title}</h3>
+    <p class="detail-subtitle">${p.type}</p>
+
+    <div class="detail-divider"></div>
+
+    <p class="detail-section-title">Overview</p>
+    <p class="detail-body">${p.overview}</p>
+
+    <div class="detail-divider"></div>
+
+    <p class="detail-section-title">Technologies Used</p>
+    <div class="detail-tags">${tagsHtml}</div>
+
+    <div class="detail-divider"></div>
+
+    <p class="detail-section-title">Main Features</p>
+    <ul class="learning-list">${featuresHtml}</ul>
+
+    <div class="detail-divider"></div>
+
+    <p class="detail-section-title">Challenges Faced</p>
+    <p class="detail-body">${p.challenges}</p>
+
+    <div class="detail-divider"></div>
+
+    <p class="detail-section-title">Key Learnings</p>
+    <ul class="learning-list">${learningsHtml}</ul>
+  `;
+
+  document.getElementById('detail-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeDetail() {
+  document.getElementById('detail-modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+/* ── Navigation ──────────────────────────────────────────────── */
+function openProjects() {
+  const p = document.getElementById('projects-page');
+  p.classList.add('open');
+  p.scrollTop = 0;
+}
+
+function closeProjects() {
+  document.getElementById('projects-page').classList.remove('open');
+}
+
+function openResume() {
+  window.open('/Users/abdullah/Downloads/1CV1.pdf', '_blank');
+}
+
+function openContact() {
+  document.getElementById('contact-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeContact() {
+  document.getElementById('contact-modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { closeDetail(); closeContact(); closeProjects(); }
+});
+</script>
+</body>
+</html>
