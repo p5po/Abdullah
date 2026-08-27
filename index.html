@@ -102,7 +102,6 @@
       transition: all 350ms cubic-bezier(.445, .05, .55, .95);
     }
 
-    /* Light mode state for the button */
     .toggle--checkbox:checked + .toggle--btn {
       background: #9ee3fb;
       border-color: #86d3ec;
@@ -119,7 +118,7 @@
       transform: translateX(-15px);
     }
 
-    /* ─── CODE BACKGROUND ─────────────────────────────────────── */
+    /* ─── CODE BACKGROUND (HARDWARE ACCELERATED) ──────────────── */
     #code-bg {
       position: fixed;
       inset: 0;
@@ -128,6 +127,8 @@
       pointer-events: none;
       background: var(--white);
       transition: background var(--t);
+      -webkit-transform: translate3d(0, 0, 0);
+      transform: translate3d(0, 0, 0);
     }
 
     .code-row {
@@ -140,12 +141,21 @@
       opacity: 0.45;
       letter-spacing: .025em;
       will-change: transform;
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+      -webkit-transform: translateZ(0);
+      transform: translateZ(0);
       animation: ticker linear infinite;
     }
 
     @keyframes ticker {
-      from { transform: translateX(0); }
-      to   { transform: translateX(-50%); }
+      0%   { transform: translate3d(0, 0, 0); }
+      100% { transform: translate3d(-50%, 0, 0); }
+    }
+
+    @-webkit-keyframes ticker {
+      0%   { -webkit-transform: translate3d(0, 0, 0); }
+      100% { -webkit-transform: translate3d(-50%, 0, 0); }
     }
 
     /* ─── PAGES ───────────────────────────────────────────────── */
@@ -236,6 +246,7 @@
       transition: box-shadow var(--t), border-color var(--t), transform var(--t), background var(--t);
       outline: none;
       backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
     }
 
     .card:hover {
@@ -344,6 +355,7 @@
       inset: 0;
       background: var(--sheet-bg);
       backdrop-filter: blur(2px);
+      -webkit-backdrop-filter: blur(2px);
       z-index: -1;
     }
 
@@ -689,10 +701,16 @@
       to   { opacity: 1; transform: translateY(0); }
     }
 
-    /* ─── RESPONSIVE ──────────────────────────────────────────── */
+    /* ─── RESPONSIVE & MOBILE OPTIMIZATIONS ───────────────────── */
     @media (max-width: 660px) {
       .cards { grid-template-columns: 1fr; max-width: 320px; }
       .toggle-wrapper { top: 16px; right: 16px; }
+      /* استبدال الـ Blur الثقيل في الجوال لتسريع الرندر الفوري */
+      .card {
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        background: var(--bg) !important;
+      }
     }
     @media (min-width: 661px) and (max-width: 840px) {
       .cards { grid-template-columns: repeat(2, 1fr); }
@@ -894,7 +912,7 @@
 
 <!-- ═══════════════════════════════════════════════════════
      CONTACT MODAL
-═══════════════════════════════════════════════════════ -->
+═════════════════════════════════════════════════════════ -->
 <div id="contact-modal" role="dialog" aria-modal="true" aria-label="Contact"
      onclick="if(event.target===this)closeContact()">
   <div class="contact-box">
@@ -956,7 +974,7 @@ function toggleTheme(isLight) {
   }
 })();
 
-/* ── Code background (iOS/Safari Optimized) ─────────────────── */
+/* ── Code background (Instant Render & Zero-Freeze Engine) ───── */
 (function () {
   const snippets = [
     '#include <iostream>',    'std::vector<int>',       'for(int i=0;i<n;i++)',
@@ -982,40 +1000,36 @@ function toggleTheme(isLight) {
   const bg = document.getElementById('code-bg');
   const rowH = 34;
 
-  function renderCodeBackground() {
-    bg.innerHTML = '';
+  function buildRows() {
+    const fragment = document.createDocumentFragment();
     const vHeight = Math.max(window.innerHeight, window.screen.height || 0);
     const vWidth = Math.max(window.innerWidth, window.screen.width || 0);
-    const rows = Math.ceil(vHeight / rowH) + 6;
+    const rows = Math.ceil(vHeight / rowH) + 4;
 
     for (let r = 0; r < rows; r++) {
       const row = document.createElement('div');
       row.className = 'code-row';
       row.style.top = (r * rowH + 6) + 'px';
 
-      const dur = 55 + Math.random() * 55;
-      const delay = -(Math.random() * dur);
+      const dur = 60 + (r % 5) * 15;
       row.style.animationDuration = dur + 's';
-      row.style.animationDelay = delay + 's';
+      row.style.webkitAnimationDuration = dur + 's';
 
       let text = '';
       const count = Math.ceil((vWidth * 3) / 13);
       for (let i = 0; i < count; i++) {
-        text += snippets[Math.floor(Math.random() * snippets.length)] + '   ·   ';
+        text += snippets[(r * 3 + i) % snippets.length] + '   ·   ';
       }
       row.textContent = text + text;
-      bg.appendChild(row);
+      fragment.appendChild(row);
     }
+    bg.innerHTML = '';
+    bg.appendChild(fragment);
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', renderCodeBackground);
-  } else {
-    renderCodeBackground();
-  }
-
-  window.addEventListener('resize', renderCodeBackground);
-  window.addEventListener('orientationchange', renderCodeBackground);
+  buildRows();
+  window.addEventListener('resize', buildRows, { passive: true });
+  window.addEventListener('orientationchange', buildRows, { passive: true });
 })();
 
 /* ── Project data ────────────────────────────────────────────── */
