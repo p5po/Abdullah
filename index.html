@@ -894,7 +894,7 @@
 
 <!-- ═══════════════════════════════════════════════════════
      CONTACT MODAL
-═════════════════════════════════════════════════════════ -->
+═══════════════════════════════════════════════════════ -->
 <div id="contact-modal" role="dialog" aria-modal="true" aria-label="Contact"
      onclick="if(event.target===this)closeContact()">
   <div class="contact-box">
@@ -944,7 +944,6 @@ function toggleTheme(isLight) {
   }
 }
 
-// Check saved theme or default to Dark
 (function initTheme() {
   const savedTheme = localStorage.getItem('theme');
   const toggleCheckbox = document.getElementById('toggle--daynight');
@@ -957,7 +956,7 @@ function toggleTheme(isLight) {
   }
 })();
 
-/* ── Code background ─────────────────────────────────────────── */
+/* ── Code background (iOS/Safari Optimized) ─────────────────── */
 (function () {
   const snippets = [
     '#include <iostream>',    'std::vector<int>',       'for(int i=0;i<n;i++)',
@@ -982,24 +981,41 @@ function toggleTheme(isLight) {
 
   const bg = document.getElementById('code-bg');
   const rowH = 34;
-  const rows = Math.ceil(window.innerHeight / rowH) + 3;
 
-  for (let r = 0; r < rows; r++) {
-    const row = document.createElement('div');
-    row.className = 'code-row';
-    row.style.top = (r * rowH + 6) + 'px';
+  function renderCodeBackground() {
+    bg.innerHTML = '';
+    const vHeight = Math.max(window.innerHeight, window.screen.height || 0);
+    const vWidth = Math.max(window.innerWidth, window.screen.width || 0);
+    const rows = Math.ceil(vHeight / rowH) + 6;
 
-    const dur = 55 + Math.random() * 55;
-    const delay = -(Math.random() * dur);
-    row.style.animationDuration = dur + 's';
-    row.style.animationDelay = delay + 's';
+    for (let r = 0; r < rows; r++) {
+      const row = document.createElement('div');
+      row.className = 'code-row';
+      row.style.top = (r * rowH + 6) + 'px';
 
-    let text = '';
-    const count = Math.ceil((window.innerWidth * 2.8) / 13);
-    for (let i = 0; i < count; i++) text += snippets[Math.floor(Math.random() * snippets.length)] + '   ·   ';
-    row.textContent = text + text;
-    bg.appendChild(row);
+      const dur = 55 + Math.random() * 55;
+      const delay = -(Math.random() * dur);
+      row.style.animationDuration = dur + 's';
+      row.style.animationDelay = delay + 's';
+
+      let text = '';
+      const count = Math.ceil((vWidth * 3) / 13);
+      for (let i = 0; i < count; i++) {
+        text += snippets[Math.floor(Math.random() * snippets.length)] + '   ·   ';
+      }
+      row.textContent = text + text;
+      bg.appendChild(row);
+    }
   }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', renderCodeBackground);
+  } else {
+    renderCodeBackground();
+  }
+
+  window.addEventListener('resize', renderCodeBackground);
+  window.addEventListener('orientationchange', renderCodeBackground);
 })();
 
 /* ── Project data ────────────────────────────────────────────── */
