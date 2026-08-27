@@ -10,23 +10,116 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+    /* ─── DARK THEME (DEFAULT) ─────────────────────────────────── */
     :root {
-      --white:   #ffffff;
-      --bg:      #f7f7f7;
-      --border:  #e5e7eb;
-      --border2: #d1d5db;
-      --text:    #0f0f0f;
-      --sub:     #6b7280;
-      --muted:   #9ca3af;
-      --r:       16px;
-      --t:       .26s ease;
-      --shadow:  0 4px 24px rgba(0,0,0,.06);
-      --shadow-h:0 10px 40px rgba(0,0,0,.10);
+      --white:     #0f172a;
+      --bg:        #1e293b;
+      --border:    #334155;
+      --border2:   #475569;
+      --text:      #f8fafc;
+      --sub:       #94a3b8;
+      --muted:     #64748b;
+      --card-bg:   rgba(30, 41, 59, 0.85);
+      --card-bg-h: rgba(30, 41, 59, 0.98);
+      --code-color:#334155;
+      --modal-bg:  #1e293b;
+      --sheet-bg:  rgba(15, 23, 42, 0.82);
+      --r:         16px;
+      --t:         .26s ease;
+      --shadow:    0 4px 24px rgba(0,0,0,.3);
+      --shadow-h:  0 10px 40px rgba(0,0,0,.5);
     }
 
-    html, body { height: 100%; font-family: 'Manrope', system-ui, sans-serif; background: var(--white); color: var(--text); overflow-x: hidden; }
+    /* ─── LIGHT THEME ──────────────────────────────────────────── */
+    body.light-mode {
+      --white:     #ffffff;
+      --bg:        #f7f7f7;
+      --border:    #e5e7eb;
+      --border2:   #d1d5db;
+      --text:      #0f0f0f;
+      --sub:       #6b7280;
+      --muted:     #9ca3af;
+      --card-bg:   rgba(255, 255, 255, 0.92);
+      --card-bg-h: rgba(255, 255, 255, 0.98);
+      --code-color:#bababa;
+      --modal-bg:  #ffffff;
+      --sheet-bg:  rgba(255, 255, 255, 0.82);
+      --shadow:    0 4px 24px rgba(0,0,0,.06);
+      --shadow-h:  0 10px 40px rgba(0,0,0,.10);
+    }
 
-    /* ─── CODE BACKGROUND (shared layer) ─────────────────────── */
+    html, body { height: 100%; font-family: 'Manrope', system-ui, sans-serif; background: var(--white); color: var(--text); overflow-x: hidden; transition: background var(--t), color var(--t); }
+
+    /* ─── DAY/NIGHT TOGGLE BUTTON ────────────────────────────── */
+    .toggle-wrapper {
+      position: fixed;
+      top: 24px;
+      right: 24px;
+      z-index: 50;
+      display: flex;
+      align-items: center;
+    }
+
+    .toggle--checkbox {
+      display: none;
+    }
+
+    .toggle--btn {
+      display: block;
+      position: relative;
+      width: 70px;
+      height: 36px;
+      background: #232d3f;
+      border-radius: 36px;
+      border: 3px solid #141c27;
+      cursor: pointer;
+      transition: all 350ms ease-in;
+    }
+
+    .toggle--btn:before {
+      content: "";
+      position: absolute;
+      top: 2px;
+      left: 3px;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #e2e8f0;
+      box-shadow: inset -2px -2px 0 0 #94a3b8;
+      transition: all 350ms cubic-bezier(.445, .05, .55, .95);
+    }
+
+    .toggle--feature {
+      display: block;
+      position: absolute;
+      top: 7px;
+      left: 38px;
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      background: #ffffff;
+      box-shadow: 12px 0 0 0 #ffffff, 4px 10px 0 0 #ffffff, 16px 8px 0 0 #ffffff;
+      transition: all 350ms cubic-bezier(.445, .05, .55, .95);
+    }
+
+    /* Light mode state for the button */
+    .toggle--checkbox:checked + .toggle--btn {
+      background: #9ee3fb;
+      border-color: #86d3ec;
+    }
+
+    .toggle--checkbox:checked + .toggle--btn:before {
+      background: #ffcc33;
+      transform: translateX(34px);
+      box-shadow: inset -2px -2px 0 0 #e6a800;
+    }
+
+    .toggle--checkbox:checked + .toggle--btn .toggle--feature {
+      opacity: 0;
+      transform: translateX(-15px);
+    }
+
+    /* ─── CODE BACKGROUND ─────────────────────────────────────── */
     #code-bg {
       position: fixed;
       inset: 0;
@@ -34,6 +127,7 @@
       overflow: hidden;
       pointer-events: none;
       background: var(--white);
+      transition: background var(--t);
     }
 
     .code-row {
@@ -42,7 +136,7 @@
       font-family: 'Manrope', monospace;
       font-size: 12.5px;
       font-weight: 500;
-      color: #bababa;
+      color: var(--code-color);
       opacity: 0.45;
       letter-spacing: .025em;
       will-change: transform;
@@ -76,23 +170,16 @@
       text-align: center;
     }
 
-    /* Avatar ring */
     .avatar {
       width: 72px;
       height: 72px;
       border-radius: 50%;
       border: 1.5px solid var(--border2);
-      background: var(--bg);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.5rem;
-      font-weight: 800;
-      color: var(--sub);
+      object-fit: cover;
       margin-bottom: 28px;
-      letter-spacing: -.02em;
       opacity: 0;
       animation: fadeUp .5s .05s forwards;
+      display: block;
     }
 
     h1 {
@@ -138,7 +225,7 @@
     }
 
     .card {
-      background: rgba(255,255,255,.92);
+      background: var(--card-bg);
       border: 1px solid var(--border);
       border-radius: var(--r);
       padding: 28px 24px 24px;
@@ -155,10 +242,9 @@
       box-shadow: var(--shadow-h);
       border-color: var(--border2);
       transform: translateY(-4px);
-      background: rgba(255,255,255,.98);
+      background: var(--card-bg-h);
     }
 
-    /* Thin top line slide-in */
     .card::before {
       content: '';
       position: absolute;
@@ -170,7 +256,6 @@
       transition: transform .32s ease;
     }
     .card:hover::before { transform: scaleX(1); }
-
     .card:focus-visible { outline: 2px solid var(--text); outline-offset: 3px; }
 
     .card-icon {
@@ -241,11 +326,10 @@
       inset: 0;
       z-index: 10;
       overflow-y: auto;
-      background: transparent; /* shows code-bg through */
+      background: transparent;
     }
     #projects-page.open { display: block; }
 
-    /* White content wrapper so text is readable over code-bg */
     .projects-inner {
       position: relative;
       z-index: 1;
@@ -254,12 +338,11 @@
       padding: 52px 28px 96px;
     }
 
-    /* Frosted white sheet behind content */
     .projects-inner::before {
       content: '';
       position: fixed;
       inset: 0;
-      background: rgba(255,255,255,.82);
+      background: var(--sheet-bg);
       backdrop-filter: blur(2px);
       z-index: -1;
     }
@@ -272,7 +355,7 @@
       font-size: .8rem;
       font-weight: 600;
       color: var(--sub);
-      background: rgba(255,255,255,.9);
+      background: var(--card-bg);
       border: 1px solid var(--border);
       border-radius: 8px;
       padding: 9px 16px;
@@ -280,7 +363,7 @@
       margin-bottom: 48px;
       transition: color var(--t), border-color var(--t), background var(--t);
     }
-    .back-btn:hover { color: var(--text); border-color: var(--border2); background: #fff; }
+    .back-btn:hover { color: var(--text); border-color: var(--border2); background: var(--bg); }
 
     .pg-heading {
       font-size: clamp(1.5rem, 4vw, 2.2rem);
@@ -304,7 +387,7 @@
     }
 
     .proj-card {
-      background: rgba(255,255,255,.95);
+      background: var(--card-bg);
       border: 1px solid var(--border);
       border-radius: var(--r);
       padding: 24px 20px 20px;
@@ -369,7 +452,7 @@
       cursor: pointer;
       transition: background var(--t), border-color var(--t);
     }
-    .view-btn:hover { background: #efefef; border-color: var(--border2); }
+    .view-btn:hover { background: var(--border); border-color: var(--border2); }
 
     /* ─── DETAILS MODAL ───────────────────────────────────────── */
     #detail-modal {
@@ -377,7 +460,7 @@
       position: fixed;
       inset: 0;
       z-index: 300;
-      background: rgba(0,0,0,.22);
+      background: rgba(0,0,0,.45);
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
       align-items: center;
@@ -387,7 +470,7 @@
     #detail-modal.open { display: flex; }
 
     .detail-box {
-      background: #fff;
+      background: var(--modal-bg);
       border: 1px solid var(--border);
       border-radius: 20px;
       padding: 40px;
@@ -395,7 +478,7 @@
       width: 100%;
       max-height: 86vh;
       overflow-y: auto;
-      box-shadow: 0 32px 80px rgba(0,0,0,.14);
+      box-shadow: 0 32px 80px rgba(0,0,0,.35);
       animation: modalIn .28s cubic-bezier(.34,1.3,.64,1) forwards;
     }
 
@@ -434,7 +517,7 @@
       transition: background var(--t), color var(--t);
       flex-shrink: 0;
     }
-    .detail-close:hover { background: #efefef; color: var(--text); }
+    .detail-close:hover { background: var(--border); color: var(--text); }
 
     .detail-title {
       font-size: 1.25rem;
@@ -515,7 +598,7 @@
       position: fixed;
       inset: 0;
       z-index: 200;
-      background: rgba(0,0,0,.22);
+      background: rgba(0,0,0,.45);
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
       align-items: center;
@@ -525,13 +608,13 @@
     #contact-modal.open { display: flex; }
 
     .contact-box {
-      background: #fff;
+      background: var(--modal-bg);
       border: 1px solid var(--border);
       border-radius: 20px;
       padding: 38px;
       max-width: 400px;
       width: 100%;
-      box-shadow: 0 24px 64px rgba(0,0,0,.11);
+      box-shadow: 0 24px 64px rgba(0,0,0,.3);
       animation: modalIn .28s cubic-bezier(.34,1.3,.64,1) forwards;
     }
 
@@ -566,16 +649,16 @@
       border-radius: 11px;
       text-decoration: none;
       color: var(--text);
-      background: var(--white);
+      background: var(--bg);
       transition: background var(--t), border-color var(--t), transform var(--t);
     }
-    .contact-item:hover { background: var(--bg); border-color: var(--border2); transform: translateX(3px); }
+    .contact-item:hover { background: var(--border); border-color: var(--border2); transform: translateX(3px); }
 
     .c-icon {
       width: 36px; height: 36px;
       border-radius: 9px;
       border: 1px solid var(--border);
-      background: var(--bg);
+      background: var(--white);
       display: flex; align-items: center; justify-content: center;
       font-size: .95rem;
       flex-shrink: 0;
@@ -598,7 +681,7 @@
       font-family: inherit;
       transition: background var(--t), color var(--t);
     }
-    .modal-close:hover { background: #efefef; color: var(--text); }
+    .modal-close:hover { background: var(--border); color: var(--text); }
 
     /* ─── ANIMATIONS ──────────────────────────────────────────── */
     @keyframes fadeUp {
@@ -609,6 +692,7 @@
     /* ─── RESPONSIVE ──────────────────────────────────────────── */
     @media (max-width: 660px) {
       .cards { grid-template-columns: 1fr; max-width: 320px; }
+      .toggle-wrapper { top: 16px; right: 16px; }
     }
     @media (min-width: 661px) and (max-width: 840px) {
       .cards { grid-template-columns: repeat(2, 1fr); }
@@ -617,6 +701,16 @@
   </style>
 </head>
 <body>
+
+<!-- ═══════════════════════════════════════════════════════
+     DAY/NIGHT TOGGLE BUTTON
+═════════════════════════════════════════════════════════ -->
+<div class="toggle-wrapper">
+  <div class="toggle toggle--daynight">
+    <input type="checkbox" id="toggle--daynight" class="toggle--checkbox" onchange="toggleTheme(this.checked)" aria-label="Toggle Theme">
+    <label class="toggle--btn" for="toggle--daynight"><span class="toggle--feature"></span></label>
+  </div>
+</div>
 
 <!-- ═══════════════════════════════════════════════════════
      SHARED CODE BACKGROUND — fixed, behind everything
@@ -629,7 +723,7 @@
 <div class="page" id="home-page">
   <main>
 
-    <div class="avatar" aria-hidden="true">AB</div>
+    <img class="avatar" src="https://media.licdn.com/dms/image/v2/D4D03AQHfr5lEZTrIww/profile-displayphoto-scale_400_400/B4DZwt6os9JwAg-/0/1770296874423?e=1789603200&v=beta&t=rxkqtZ9fLudLH67nZzYV2btfWeKrMK2mnT05IyXkNhg" alt="Abdullah Bin Taleb" />
 
     <h1>Abdullah Bin Taleb</h1>
     <p class="role">Computer Science Fresh Graduate</p>
@@ -703,22 +797,21 @@
           <span class="proj-tag">Computer Vision</span>
         </div>
         <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-  <button class="view-btn" onclick="openDetail('face')">View Details →</button>
-
-  <a
-    href="https://github.com/p5po/AI-Face-Recognition-Attendance"
-    target="_blank"
-    rel="noopener noreferrer"
-    class="view-btn"
-    style="text-decoration:none;"
-    aria-label="Go to GitHub repository"
-  >
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-      <path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56v-2.15c-3.2.7-3.87-1.36-3.87-1.36-.53-1.33-1.28-1.68-1.28-1.68-1.04-.71.08-.7.08-.7 1.15.08 1.75 1.18 1.75 1.18 1.03 1.76 2.7 1.25 3.36.96.1-.75.4-1.25.73-1.54-.55-.29-2.55-1.28-5.23-5.7 0-1.26.45-2.29 1.18-3.1-.12-.29-.51-1.47.11-3.06 0 0 .96-.31 3.15 1.18A10.9 10.9 0 0 1 12 8.07c.97 0 1.94.13 2.85.38 2.19-1.49 3.15-1.18 3.15-1.18.62 1.59.23 2.77.11 3.06.73.81 1.18 1.84 1.18 3.1 0 4.43-2.69 5.4-5.25 5.69.41.36.78 1.08.78 2.18v3.24c0 .31.21.67.8.56A11.51 11.51 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z"/>
-    </svg>
-    Go to GitHub ↗
-  </a>
-</div>
+          <button class="view-btn" onclick="openDetail('face')">View Details →</button>
+          <a
+            href="https://github.com/p5po/AI-Face-Recognition-Attendance"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="view-btn"
+            style="text-decoration:none;"
+            aria-label="Go to GitHub repository"
+          >
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56v-2.15c-3.2.7-3.87-1.36-3.87-1.36-.53-1.33-1.28-1.68-1.28-1.68-1.04-.71.08-.7.08-.7 1.15.08 1.75 1.18 1.75 1.18 1.03 1.76 2.7 1.25 3.36.96.1-.75.4-1.25.73-1.54-.55-.29-2.55-1.28-5.23-5.7 0-1.26.45-2.29 1.18-3.1-.12-.29-.51-1.47.11-3.06 0 0 .96-.31 3.15 1.18A10.9 10.9 0 0 1 12 8.07c.97 0 1.94.13 2.85.38 2.19-1.49 3.15-1.18 3.15-1.18.62 1.59.23 2.77.11 3.06.73.81 1.18 1.84 1.18 3.1 0 4.43-2.69 5.4-5.25 5.69.41.36.78 1.08.78 2.18v3.24c0 .31.21.67.8.56A11.51 11.51 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z"/>
+            </svg>
+            Go to GitHub ↗
+          </a>
+        </div>
       </article>
 
       <!-- P2 -->
@@ -840,6 +933,30 @@
      SCRIPTS
 ═════════════════════════════════════════════════════════ -->
 <script>
+/* ── Theme Toggle Logic ───────────────────────────────────────── */
+function toggleTheme(isLight) {
+  if (isLight) {
+    document.body.classList.add('light-mode');
+    localStorage.setItem('theme', 'light');
+  } else {
+    document.body.classList.remove('light-mode');
+    localStorage.setItem('theme', 'dark');
+  }
+}
+
+// Check saved theme or default to Dark
+(function initTheme() {
+  const savedTheme = localStorage.getItem('theme');
+  const toggleCheckbox = document.getElementById('toggle--daynight');
+  if (savedTheme === 'light') {
+    document.body.classList.add('light-mode');
+    if (toggleCheckbox) toggleCheckbox.checked = true;
+  } else {
+    document.body.classList.remove('light-mode');
+    if (toggleCheckbox) toggleCheckbox.checked = false;
+  }
+})();
+
 /* ── Code background ─────────────────────────────────────────── */
 (function () {
   const snippets = [
@@ -854,7 +971,7 @@
     'X_train, X_test =',      'model.fit(X, y)',         'accuracy_score(y)',
     'pd.read_csv("data")',    'np.array([1,2,3])',      'from sklearn import',
     'lambda x: x**2',        'list(map(f, data))',      'df.describe()',
-    'plt.figure(figsize=)',   'import matplotlib',       'StandardScaler()',
+    'plt.figure(figsize=)',   'import matplotlib',        'StandardScaler()',
 
     'ggplot(data, aes(x))',   'library(dplyr)',          'library(ggplot2)',
     'mutate(col = val)',      'filter(score > 0)',        'summarise(avg=mean(x))',
@@ -1076,6 +1193,7 @@ function closeProjects() {
 function openResume() {
   window.open('https://drive.google.com/file/d/1XrzCWJ2zUFnDY6cVUZylmSg4boXl1EXH/view?usp=share_link', '_blank');
 }
+
 function openContact() {
   document.getElementById('contact-modal').classList.add('open');
   document.body.style.overflow = 'hidden';
