@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
   <meta name="description" content="Abdullah Bin Taleb – Computer Science Fresh graduate interested in Data Science, AI, and Software Development"/>
   <title>Abdullah Bin Taleb</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
@@ -691,9 +691,73 @@
     }
 
     /* ─── RESPONSIVE ──────────────────────────────────────────── */
+    /* ─── RESPONSIVE & MOBILE UX ENHANCEMENTS ─────────────────── */
+    
+    /* 1. منع التحديد غير المقصود وتحديد اللمس السريع */
+    button, .card, .proj-card, .contact-item, .toggle--btn {
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+      user-select: none;
+    }
+
     @media (max-width: 660px) {
-      .cards { grid-template-columns: 1fr; max-width: 320px; }
-      .toggle-wrapper { top: 16px; right: 16px; }
+      /* الحشوات العامة وتوسيط العناصر على الشاشات الصغيرة */
+      main {
+        padding: 60px 16px 40px;
+      }
+      
+      .cards { 
+        grid-template-columns: 1fr; 
+        max-width: 100%; 
+        width: 100%;
+        gap: 14px;
+      }
+      
+      .card {
+        padding: 22px 18px 18px;
+      }
+
+      .toggle-wrapper { 
+        top: 14px; 
+        right: 14px; 
+      }
+
+      /* تحسين صفحة المشاريع للجوال */
+      .projects-inner {
+        padding: 28px 16px 64px;
+      }
+
+      .proj-grid {
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+
+      .proj-card {
+        padding: 20px 16px 16px;
+      }
+
+      /* تحسين حجم الأزرار لتكون مريحة للمس بالإبهام */
+      .view-btn {
+        padding: 10px 16px;
+        font-size: .82rem;
+      }
+
+      /* تحسين النوافذ المنبثقة (Modals) لتظهر كـ Bottom Sheet أنيقة على الجوال */
+      #detail-modal, #contact-modal {
+        padding: 12px;
+        align-items: flex-end; /* تفتح من الأسفل مثل تطبيقات iOS/Android */
+      }
+
+      .detail-box, .contact-box {
+        max-height: 88vh;
+        padding: 26px 20px 24px;
+        border-radius: 20px 20px 14px 14px;
+        width: 100%;
+      }
+
+      .detail-title {
+        font-size: 1.15rem;
+      }
     }
     @media (min-width: 661px) and (max-width: 840px) {
       .cards { grid-template-columns: repeat(2, 1fr); }
