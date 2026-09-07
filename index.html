@@ -48,7 +48,56 @@
       --shadow-h:  0 10px 40px rgba(0,0,0,.10);
     }
 
-    html, body { height: 100%; font-family: 'Manrope', system-ui, sans-serif; background: var(--white); color: var(--text); overflow-x: hidden; transition: background var(--t), color var(--t); }
+    html, body { 
+      min-height: 100%; 
+      font-family: 'Manrope', system-ui, sans-serif; 
+      background: var(--white); 
+      color: var(--text); 
+      overflow-x: hidden; 
+      transition: background var(--t), color var(--t); 
+    }
+
+    /* ─── LOADING SCREEN (PRELOADER) ─────────────────────────── */
+    #preloader {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: var(--white);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      transition: opacity 0.5s ease, visibility 0.5s ease;
+    }
+
+    #preloader.loaded {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .loader-spinner {
+      width: 42px;
+      height: 42px;
+      border: 3px solid var(--border);
+      border-top-color: var(--text);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    .loader-text {
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-family: 'Manrope', monospace;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
 
     /* ─── DAY/NIGHT TOGGLE BUTTON ────────────────────────────── */
     .toggle-wrapper {
@@ -60,9 +109,7 @@
       align-items: center;
     }
 
-    .toggle--checkbox {
-      display: none;
-    }
+    .toggle--checkbox { display: none; }
 
     .toggle--btn {
       display: block;
@@ -102,7 +149,6 @@
       transition: all 350ms cubic-bezier(.445, .05, .55, .95);
     }
 
-    /* Light mode state for the button */
     .toggle--checkbox:checked + .toggle--btn {
       background: #9ee3fb;
       border-color: #86d3ec;
@@ -128,6 +174,8 @@
       pointer-events: none;
       background: var(--white);
       transition: background var(--t);
+      transform: translateZ(0);
+      -webkit-transform: translateZ(0);
     }
 
     .code-row {
@@ -140,12 +188,14 @@
       opacity: 0.45;
       letter-spacing: .025em;
       will-change: transform;
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
       animation: ticker linear infinite;
     }
 
     @keyframes ticker {
-      from { transform: translateX(0); }
-      to   { transform: translateX(-50%); }
+      from { transform: translate3d(0, 0, 0); }
+      to   { transform: translate3d(-50%, 0, 0); }
     }
 
     /* ─── PAGES ───────────────────────────────────────────────── */
@@ -157,7 +207,6 @@
       flex-direction: column;
     }
 
-    /* ─── HOME ────────────────────────────────────────────────── */
     #home-page { display: flex; }
 
     main {
@@ -217,7 +266,7 @@
     /* ─── CARDS ───────────────────────────────────────────────── */
     .cards {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(2, 1fr);
       gap: 16px;
       width: 100%;
       max-width: 860px;
@@ -237,6 +286,7 @@
       transition: box-shadow var(--t), border-color var(--t), transform var(--t), background var(--t);
       outline: none;
       backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
     }
 
     .card:hover {
@@ -265,9 +315,14 @@
       border-radius: 10px;
       background: var(--bg);
       display: flex; align-items: center; justify-content: center;
-      font-size: 1.05rem;
       margin-bottom: 20px;
       transition: border-color var(--t);
+      color: var(--text);
+    }
+    .card-icon svg {
+      width: 20px;
+      height: 20px;
+      stroke-width: 2;
     }
     .card:hover .card-icon { border-color: var(--border2); }
 
@@ -320,16 +375,17 @@
       border-top: 1px solid var(--border);
     }
 
-    /* ─── PROJECTS PAGE ───────────────────────────────────────── */
-    #projects-page {
+    /* ─── PROJECTS PAGES ──────────────────────────────────────── */
+    #projects-page, #live-projects-page {
       display: none;
       position: fixed;
       inset: 0;
       z-index: 10;
       overflow-y: auto;
       background: transparent;
+      -webkit-overflow-scrolling: touch;
     }
-    #projects-page.open { display: block; }
+    #projects-page.open, #live-projects-page.open { display: block; }
 
     .projects-inner {
       position: relative;
@@ -345,6 +401,7 @@
       inset: 0;
       background: var(--sheet-bg);
       backdrop-filter: blur(2px);
+      -webkit-backdrop-filter: blur(2px);
       z-index: -1;
     }
 
@@ -451,6 +508,7 @@
       border-radius: 8px;
       padding: 8px 14px;
       cursor: pointer;
+      text-decoration: none;
       transition: background var(--t), border-color var(--t);
     }
     .view-btn:hover { background: var(--border); border-color: var(--border2); }
@@ -669,7 +727,6 @@
     .c-label { font-size: .62rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .1em; margin-bottom: 2px; }
     .c-value { font-size: .85rem; font-weight: 600; color: var(--text); }
 
-    /* ─── SHARED CLOSE BUTTON ─────────────────────────────────── */
     .modal-close {
       width: 32px; height: 32px;
       border-radius: 8px;
@@ -684,16 +741,13 @@
     }
     .modal-close:hover { background: var(--border); color: var(--text); }
 
-    /* ─── ANIMATIONS ──────────────────────────────────────────── */
+    /* ─── ANIMATIONS ──────────────────────────────────── */
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(14px); }
       to   { opacity: 1; transform: translateY(0); }
     }
 
-    /* ─── RESPONSIVE ──────────────────────────────────────────── */
-    /* ─── RESPONSIVE & MOBILE UX ENHANCEMENTS ─────────────────── */
-    
-    /* 1. منع التحديد غير المقصود وتحديد اللمس السريع */
+    /* ─── RESPONSIVE ──────────────────────────────────── */
     button, .card, .proj-card, .contact-item, .toggle--btn {
       -webkit-tap-highlight-color: transparent;
       touch-action: manipulation;
@@ -701,71 +755,29 @@
     }
 
     @media (max-width: 660px) {
-      /* الحشوات العامة وتوسيط العناصر على الشاشات الصغيرة */
-      main {
-        padding: 60px 16px 40px;
-      }
-      
-      .cards { 
-        grid-template-columns: 1fr; 
-        max-width: 100%; 
-        width: 100%;
-        gap: 14px;
-      }
-      
-      .card {
-        padding: 22px 18px 18px;
-      }
-
-      .toggle-wrapper { 
-        top: 14px; 
-        right: 14px; 
-      }
-
-      /* تحسين صفحة المشاريع للجوال */
-      .projects-inner {
-        padding: 28px 16px 64px;
-      }
-
-      .proj-grid {
-        grid-template-columns: 1fr;
-        gap: 14px;
-      }
-
-      .proj-card {
-        padding: 20px 16px 16px;
-      }
-
-      /* تحسين حجم الأزرار لتكون مريحة للمس بالإبهام */
-      .view-btn {
-        padding: 10px 16px;
-        font-size: .82rem;
-      }
-
-      /* تحسين النوافذ المنبثقة (Modals) لتظهر كـ Bottom Sheet أنيقة على الجوال */
-      #detail-modal, #contact-modal {
-        padding: 12px;
-        align-items: flex-end; /* تفتح من الأسفل مثل تطبيقات iOS/Android */
-      }
-
-      .detail-box, .contact-box {
-        max-height: 88vh;
-        padding: 26px 20px 24px;
-        border-radius: 20px 20px 14px 14px;
-        width: 100%;
-      }
-
-      .detail-title {
-        font-size: 1.15rem;
-      }
-    }
-    @media (min-width: 661px) and (max-width: 840px) {
-      .cards { grid-template-columns: repeat(2, 1fr); }
-      .card:last-child { grid-column: span 2; max-width: 320px; justify-self: center; }
+      main { padding: 60px 16px 40px; }
+      .cards { grid-template-columns: 1fr; max-width: 100%; gap: 14px; }
+      .card { padding: 22px 18px 18px; }
+      .toggle-wrapper { top: 14px; right: 14px; }
+      .projects-inner { padding: 28px 16px 64px; }
+      .proj-grid { grid-template-columns: 1fr; gap: 14px; }
+      .proj-card { padding: 20px 16px 16px; }
+      .view-btn { padding: 10px 16px; font-size: .82rem; }
+      #detail-modal, #contact-modal { padding: 12px; align-items: flex-end; }
+      .detail-box, .contact-box { max-height: 88vh; padding: 26px 20px 24px; border-radius: 20px 20px 14px 14px; width: 100%; }
+      .detail-title { font-size: 1.15rem; }
     }
   </style>
 </head>
 <body>
+
+<!-- ═══════════════════════════════════════════════════════
+     LOADING SCREEN (PRELOADER)
+═════════════════════════════════════════════════════════ -->
+<div id="preloader" aria-hidden="true">
+  <div class="loader-spinner"></div>
+  <span class="loader-text">Loading...</span>
+</div>
 
 <!-- ═══════════════════════════════════════════════════════
      DAY/NIGHT TOGGLE BUTTON
@@ -778,7 +790,7 @@
 </div>
 
 <!-- ═══════════════════════════════════════════════════════
-     SHARED CODE BACKGROUND — fixed, behind everything
+     SHARED CODE BACKGROUND
 ═════════════════════════════════════════════════════════ -->
 <div id="code-bg" aria-hidden="true"></div>
 
@@ -796,36 +808,56 @@
 
     <div class="cards" role="list">
 
-      <!-- Projects -->
+      <!-- 1. My Projects -->
       <div class="card" role="listitem" tabindex="0"
            aria-label="View My Projects"
            onclick="openProjects()"
            onkeydown="if(event.key==='Enter'||event.key===' ')openProjects()">
-        <div class="card-icon" aria-hidden="true">⌨️</div>
+        <div class="card-icon" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-folder-open-dot"><path d="m6 14 1.45-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.55 6a2 2 0 0 1-1.94 1.5H4a2 2 0 0 1-2-2V5c0-1.1.9-2 2-2h3.93a2 2 0 0 1 1.66.9l.82 1.2a2 2 0 0 0 1.66.9H18a2 2 0 0 1 2 2v2"/><circle cx="14" cy="15" r="1"/></svg>
+        </div>
         <span class="card-label">Work</span>
         <h2 class="card-title">My Projects</h2>
         <p class="card-desc">Data science systems, AI tools, and software projects built through coursework and hands-on experience.</p>
         <div class="card-cta">View projects <span class="cta-arrow">→</span></div>
       </div>
 
-      <!-- Resume -->
+      <!-- 2. Live Projects -->
+      <div class="card" role="listitem" tabindex="0"
+           aria-label="View Live Projects"
+           onclick="openLiveProjects()"
+           onkeydown="if(event.key==='Enter'||event.key===' ')openLiveProjects()">
+        <div class="card-icon" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-radio"><path d="M16.247 7.761a6 6 0 0 1 0 8.478"/><path d="M19.075 4.933a10 10 0 0 1 0 14.134"/><path d="M4.925 19.067a10 10 0 0 1 0-14.134"/><path d="M7.753 16.239a6 6 0 0 1 0-8.478"/><circle cx="12" cy="12" r="2"/></svg>
+        </div>
+        <span class="card-label">Interactive</span>
+        <h2 class="card-title">Live Projects</h2>
+        <p class="card-desc">Interactive applications, dashboards, and live systems available online.</p>
+        <div class="card-cta">Explore live <span class="cta-arrow">→</span></div>
+      </div>
+
+      <!-- 3. Resume -->
       <div class="card" role="listitem" tabindex="0"
            aria-label="Open Resume"
            onclick="openResume()"
            onkeydown="if(event.key==='Enter'||event.key===' ')openResume()">
-        <div class="card-icon" aria-hidden="true">📄</div>
+        <div class="card-icon" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-user"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M16 22a4 4 0 0 0-8 0"/><circle cx="12" cy="15" r="3"/></svg>
+        </div>
         <span class="card-label">Career</span>
         <h2 class="card-title">Resume</h2>
         <p class="card-desc">My full professional resume covering skills, experience, education, and certifications.</p>
         <div class="card-cta">Open PDF <span class="cta-arrow">↗</span></div>
       </div>
 
-      <!-- Contact -->
+      <!-- 4. Contact -->
       <div class="card" role="listitem" tabindex="0"
            aria-label="Contact Me"
            onclick="openContact()"
            onkeydown="if(event.key==='Enter'||event.key===' ')openContact()">
-        <div class="card-icon" aria-hidden="true">✉️</div>
+        <div class="card-icon" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-contact-round"><path d="M16 2v2"/><path d="M17.915 21a6 6 0 10-12 0"/><path d="M8 2v2"/><circle cx="12" cy="11" r="4"/><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+        </div>
         <span class="card-label">Connect</span>
         <h2 class="card-title">Contact</h2>
         <p class="card-desc">Reach out via email, phone, or LinkedIn. Open to opportunities and collaborations.</p>
@@ -839,7 +871,7 @@
 </div>
 
 <!-- ═══════════════════════════════════════════════════════
-     PROJECTS PAGE
+     MY PROJECTS PAGE
 ═════════════════════════════════════════════════════════ -->
 <div id="projects-page" role="dialog" aria-modal="true" aria-label="Projects">
   <div class="projects-inner">
@@ -965,6 +997,23 @@
 </div>
 
 <!-- ═══════════════════════════════════════════════════════
+     LIVE PROJECTS PAGE
+═════════════════════════════════════════════════════════ -->
+<div id="live-projects-page" role="dialog" aria-modal="true" aria-label="Live Projects">
+  <div class="projects-inner">
+
+    <button class="back-btn" onclick="closeLiveProjects()" aria-label="Back to home">← Back</button>
+
+    <h2 class="pg-heading">Live Projects</h2>
+    <p class="pg-sub">Deployed applications and interactive systems running live on the web.</p>
+
+    <div class="proj-grid">
+      <!-- ستتم إضافة كروت المشاريع الحية هنا -->
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
      PROJECT DETAIL MODAL
 ═════════════════════════════════════════════════════════ -->
 <div id="detail-modal" role="dialog" aria-modal="true" aria-label="Project Details"
@@ -1013,6 +1062,19 @@
      SCRIPTS
 ═════════════════════════════════════════════════════════ -->
 <script>
+/* ── Preloader Dismiss Logic ──────────────────────────────────── */
+function hidePreloader() {
+  const preloader = document.getElementById('preloader');
+  if (preloader && !preloader.classList.contains('loaded')) {
+    preloader.classList.add('loaded');
+  }
+}
+
+// إخفاء شاشة التحميل بمجرد اكتمال تجهيز الصفحة
+window.addEventListener('load', () => {
+  setTimeout(hidePreloader, 350); // تأخير بسيط جداً لضمان انتهاء رندر الأسطر بالكامل
+});
+
 /* ── Theme Toggle Logic ───────────────────────────────────────── */
 function toggleTheme(isLight) {
   if (isLight) {
@@ -1036,10 +1098,10 @@ function toggleTheme(isLight) {
   }
 })();
 
-/* ── Code background (iOS/Safari Optimized) ─────────────────── */
+/* ── Code background ─────────────────────────────────────────── */
 (function () {
   const snippets = [
-    '#include <iostream>',    'std::vector<int>',       'for(int i=0;i<n;i++)',
+    '#include <iostream>',   'std::vector<int>',       'for(int i=0;i<n;i++)',
     'auto& val : arr',        'std::cout << result',    'int main() {',
     'return 0;',              'std::map<string,int>',   '#include <vector>',
     'template<typename T>',   'nullptr',                'size_t len = v.size();',
@@ -1066,26 +1128,29 @@ function toggleTheme(isLight) {
     bg.innerHTML = '';
     const vHeight = Math.max(window.innerHeight, window.screen.height || 0);
     const vWidth = Math.max(window.innerWidth, window.screen.width || 0);
-    const rows = Math.ceil(vHeight / rowH) + 6;
+    const rows = Math.ceil(vHeight / rowH) + 4;
+
+    const frag = document.createDocumentFragment();
 
     for (let r = 0; r < rows; r++) {
       const row = document.createElement('div');
       row.className = 'code-row';
       row.style.top = (r * rowH + 6) + 'px';
 
-      const dur = 55 + Math.random() * 55;
+      const dur = 50 + Math.random() * 40;
       const delay = -(Math.random() * dur);
       row.style.animationDuration = dur + 's';
       row.style.animationDelay = delay + 's';
 
       let text = '';
-      const count = Math.ceil((vWidth * 3) / 13);
+      const count = Math.ceil((vWidth * 2.2) / 14);
       for (let i = 0; i < count; i++) {
         text += snippets[Math.floor(Math.random() * snippets.length)] + '   ·   ';
       }
       row.textContent = text + text;
-      bg.appendChild(row);
+      frag.appendChild(row);
     }
+    bg.appendChild(frag);
   }
 
   if (document.readyState === 'loading') {
@@ -1094,8 +1159,11 @@ function toggleTheme(isLight) {
     renderCodeBackground();
   }
 
-  window.addEventListener('resize', renderCodeBackground);
-  window.addEventListener('orientationchange', renderCodeBackground);
+  let resizeTimeout;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(renderCodeBackground, 200);
+  });
 })();
 
 /* ── Project data ────────────────────────────────────────────── */
@@ -1286,6 +1354,16 @@ function closeProjects() {
   document.getElementById('projects-page').classList.remove('open');
 }
 
+function openLiveProjects() {
+  const p = document.getElementById('live-projects-page');
+  p.classList.add('open');
+  p.scrollTop = 0;
+}
+
+function closeLiveProjects() {
+  document.getElementById('live-projects-page').classList.remove('open');
+}
+
 function openResume() {
   window.open('resume.pdf', '_blank');
 }
@@ -1301,7 +1379,7 @@ function closeContact() {
 }
 
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') { closeDetail(); closeContact(); closeProjects(); }
+  if (e.key === 'Escape') { closeDetail(); closeContact(); closeProjects(); closeLiveProjects(); }
 });
 </script>
 </body>
