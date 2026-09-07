@@ -68,7 +68,7 @@
       align-items: center;
       justify-content: center;
       gap: 16px;
-      transition: opacity 0.5s ease, visibility 0.5s ease;
+      transition: opacity 0.4s ease, visibility 0.4s ease;
     }
 
     #preloader.loaded {
@@ -78,8 +78,8 @@
     }
 
     .loader-spinner {
-      width: 42px;
-      height: 42px;
+      width: 40px;
+      height: 40px;
       border: 3px solid var(--border);
       border-top-color: var(--text);
       border-radius: 50%;
@@ -165,7 +165,7 @@
       transform: translateX(-15px);
     }
 
-    /* ─── CODE BACKGROUND ─────────────────────────────────────── */
+    /* ─── CODE BACKGROUND (SEAMLESS LOOP FIX) ────────────────── */
     #code-bg {
       position: fixed;
       inset: 0;
@@ -174,28 +174,33 @@
       pointer-events: none;
       background: var(--white);
       transition: background var(--t);
-      transform: translateZ(0);
-      -webkit-transform: translateZ(0);
     }
 
     .code-row {
       position: absolute;
+      left: 0;
+      width: max-content;
+      display: flex;
       white-space: nowrap;
       font-family: 'Manrope', monospace;
-      font-size: 12.5px;
+      font-size: 13px;
       font-weight: 500;
       color: var(--code-color);
       opacity: 0.45;
-      letter-spacing: .025em;
+      letter-spacing: .03em;
       will-change: transform;
-      -webkit-backface-visibility: hidden;
-      backface-visibility: hidden;
       animation: ticker linear infinite;
     }
 
+    .code-part {
+      display: inline-block;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
     @keyframes ticker {
-      from { transform: translate3d(0, 0, 0); }
-      to   { transform: translate3d(-50%, 0, 0); }
+      0%   { transform: translate3d(0, 0, 0); }
+      100% { transform: translate3d(-50%, 0, 0); }
     }
 
     /* ─── PAGES ───────────────────────────────────────────────── */
@@ -998,7 +1003,7 @@
 
 <!-- ═══════════════════════════════════════════════════════
      LIVE PROJECTS PAGE
-═════════════════════════════════════════════════════════ -->
+═══════════════════════════════════════════════════════ -->
 <div id="live-projects-page" role="dialog" aria-modal="true" aria-label="Live Projects">
   <div class="projects-inner">
 
@@ -1070,9 +1075,8 @@ function hidePreloader() {
   }
 }
 
-// إخفاء شاشة التحميل بمجرد اكتمال تجهيز الصفحة
 window.addEventListener('load', () => {
-  setTimeout(hidePreloader, 350); // تأخير بسيط جداً لضمان انتهاء رندر الأسطر بالكامل
+  setTimeout(hidePreloader, 300);
 });
 
 /* ── Theme Toggle Logic ───────────────────────────────────────── */
@@ -1098,7 +1102,7 @@ function toggleTheme(isLight) {
   }
 })();
 
-/* ── Code background ─────────────────────────────────────────── */
+/* ── Seamless Background Ticker ──────────────────────────────── */
 (function () {
   const snippets = [
     '#include <iostream>',   'std::vector<int>',       'for(int i=0;i<n;i++)',
@@ -1124,12 +1128,18 @@ function toggleTheme(isLight) {
   const bg = document.getElementById('code-bg');
   const rowH = 34;
 
+  function buildSnippetBlock() {
+    let block = '';
+    for (let i = 0; i < 28; i++) {
+      block += snippets[Math.floor(Math.random() * snippets.length)] + '   ·   ';
+    }
+    return block;
+  }
+
   function renderCodeBackground() {
     bg.innerHTML = '';
-    const vHeight = Math.max(window.innerHeight, window.screen.height || 0);
-    const vWidth = Math.max(window.innerWidth, window.screen.width || 0);
-    const rows = Math.ceil(vHeight / rowH) + 4;
-
+    const vHeight = Math.max(window.innerHeight, screen.height, 800);
+    const rows = Math.ceil(vHeight / rowH) + 6;
     const frag = document.createDocumentFragment();
 
     for (let r = 0; r < rows; r++) {
@@ -1137,17 +1147,23 @@ function toggleTheme(isLight) {
       row.className = 'code-row';
       row.style.top = (r * rowH + 6) + 'px';
 
-      const dur = 50 + Math.random() * 40;
+      const dur = 40 + Math.random() * 35;
       const delay = -(Math.random() * dur);
       row.style.animationDuration = dur + 's';
       row.style.animationDelay = delay + 's';
 
-      let text = '';
-      const count = Math.ceil((vWidth * 2.2) / 14);
-      for (let i = 0; i < count; i++) {
-        text += snippets[Math.floor(Math.random() * snippets.length)] + '   ·   ';
-      }
-      row.textContent = text + text;
+      const content = buildSnippetBlock();
+
+      const spanA = document.createElement('span');
+      spanA.className = 'code-part';
+      spanA.textContent = content;
+
+      const spanB = document.createElement('span');
+      spanB.className = 'code-part';
+      spanB.textContent = content;
+
+      row.appendChild(spanA);
+      row.appendChild(spanB);
       frag.appendChild(row);
     }
     bg.appendChild(frag);
@@ -1159,10 +1175,10 @@ function toggleTheme(isLight) {
     renderCodeBackground();
   }
 
-  let resizeTimeout;
-  window.addEventListener('resize', () => {
-    clearTimeout(resizeTimeout);
-    resizeTimeout = setTimeout(renderCodeBackground, 200);
+  let resizeTimer;
+  window.addEventListener('orientationchange', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(renderCodeBackground, 250);
   });
 })();
 
