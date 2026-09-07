@@ -445,8 +445,8 @@
 
     .proj-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(268px, 1fr));
-      gap: 16px;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
     }
 
     .proj-card {
@@ -517,6 +517,104 @@
       transition: background var(--t), border-color var(--t);
     }
     .view-btn:hover { background: var(--border); border-color: var(--border2); }
+
+    /* ─── LIVE PROJECT CARD (TWITTER LINK PREVIEW STYLE) ─────── */
+    .live-card {
+      padding: 0;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .live-preview-box {
+      position: relative;
+      width: 100%;
+      height: 175px;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    .live-preview-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top;
+      transition: transform 0.4s ease;
+      display: block;
+    }
+
+    .live-card:hover .live-preview-img {
+      transform: scale(1.03);
+    }
+
+    .live-badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #f8fafc;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+
+    .live-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #22c55e;
+      box-shadow: 0 0 8px #22c55e;
+      animation: pulseLive 1.8s infinite;
+    }
+
+    @keyframes pulseLive {
+      0% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+
+    .live-card-body {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .live-url-label {
+      font-size: 0.68rem;
+      font-weight: 600;
+      color: var(--muted);
+      margin-bottom: 6px;
+      font-family: monospace;
+    }
+
+    .live-action-btn {
+      margin-top: auto;
+      width: 100%;
+      justify-content: center;
+      background: var(--text);
+      color: var(--white);
+      border: 1px solid var(--text);
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      transition: opacity var(--t), transform var(--t);
+    }
+
+    .live-action-btn:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
 
     /* ─── DETAILS MODAL ───────────────────────────────────────── */
     #detail-modal {
@@ -765,8 +863,9 @@
       .card { padding: 22px 18px 18px; }
       .toggle-wrapper { top: 14px; right: 14px; }
       .projects-inner { padding: 28px 16px 64px; }
-      .proj-grid { grid-template-columns: 1fr; gap: 14px; }
+      .proj-grid { grid-template-columns: 1fr; gap: 16px; }
       .proj-card { padding: 20px 16px 16px; }
+      .live-card-body { padding: 18px 16px 16px; }
       .view-btn { padding: 10px 16px; font-size: .82rem; }
       #detail-modal, #contact-modal { padding: 12px; align-items: flex-end; }
       .detail-box, .contact-box { max-height: 88vh; padding: 26px 20px 24px; border-radius: 20px 20px 14px 14px; width: 100%; }
@@ -1002,25 +1101,83 @@
 </div>
 
 <!-- ═══════════════════════════════════════════════════════
-     LIVE PROJECTS PAGE
-═══════════════════════════════════════════════════════ -->
+     LIVE PROJECTS PAGE (WITH TWITTER-STYLE LINK PREVIEWS)
+═════════════════════════════════════════════════════════ -->
 <div id="live-projects-page" role="dialog" aria-modal="true" aria-label="Live Projects">
   <div class="projects-inner">
 
     <button class="back-btn" onclick="closeLiveProjects()" aria-label="Back to home">← Back</button>
 
     <h2 class="pg-heading">Live Projects</h2>
-    <p class="pg-sub">Deployed applications and interactive systems running live on the web.</p>
+    <p class="pg-sub">Deployed web apps and interactive systems running live in production.</p>
 
     <div class="proj-grid">
-      <!-- ستتم إضافة كروت المشاريع الحية هنا -->
+
+      <!-- Live 1: XP Certificate -->
+      <article class="proj-card live-card">
+        <div class="live-preview-box">
+          <img 
+            class="live-preview-img" 
+            src="https://api.microlink.io?url=https%3A%2F%2Fxp-certificate.vercel.app%2F&screenshot=true&meta=false&embed=screenshot.url" 
+            alt="XP Certificate Live Preview"
+            loading="lazy"
+          />
+          <div class="live-badge">
+            <span class="live-dot"></span>
+            <span>Live on Vercel</span>
+          </div>
+        </div>
+        <div class="live-card-body">
+          <span class="live-url-label">xp-certificate.vercel.app</span>
+          <h3 class="proj-title">XP Certificate Generator</h3>
+          <p class="proj-desc">A modern web application built to streamline and automate experience certificate generation and validation.</p>
+          <div class="proj-tags">
+            <span class="proj-tag">Web App</span>
+            <span class="proj-tag">Production</span>
+            <span class="proj-tag">Vercel</span>
+          </div>
+          <a href="https://xp-certificate.vercel.app/" target="_blank" rel="noopener noreferrer" class="view-btn live-action-btn">
+            Launch App ↗
+          </a>
+        </div>
+      </article>
+
+      <!-- Live 2: Trip in KSA -->
+      <article class="proj-card live-card">
+        <div class="live-preview-box">
+          <img 
+            class="live-preview-img" 
+            src="https://api.microlink.io?url=https%3A%2F%2Ftrip-in-ksa.vercel.app%2F&screenshot=true&meta=false&embed=screenshot.url" 
+            alt="Trip in KSA Live Preview"
+            loading="lazy"
+          />
+          <div class="live-badge">
+            <span class="live-dot"></span>
+            <span>Live on Vercel</span>
+          </div>
+        </div>
+        <div class="live-card-body">
+          <span class="live-url-label">trip-in-ksa.vercel.app</span>
+          <h3 class="proj-title">Trip in KSA</h3>
+          <p class="proj-desc">Interactive tourism and trip planning platform exploring destinations and activities across Saudi Arabia.</p>
+          <div class="proj-tags">
+            <span class="proj-tag">Tourism Tech</span>
+            <span class="proj-tag">Interactive UI</span>
+            <span class="proj-tag">Vercel</span>
+          </div>
+          <a href="https://trip-in-ksa.vercel.app/" target="_blank" rel="noopener noreferrer" class="view-btn live-action-btn">
+            Launch App ↗
+          </a>
+        </div>
+      </article>
+
     </div>
   </div>
 </div>
 
 <!-- ═══════════════════════════════════════════════════════
      PROJECT DETAIL MODAL
-═════════════════════════════════════════════════════════ -->
+═══════════════════════════════════════════════════════ -->
 <div id="detail-modal" role="dialog" aria-modal="true" aria-label="Project Details"
      onclick="if(event.target===this)closeDetail()">
   <div class="detail-box" id="detail-content"></div>
@@ -1065,7 +1222,7 @@
 
 <!-- ═══════════════════════════════════════════════════════
      SCRIPTS
-═════════════════════════════════════════════════════════ -->
+═══════════════════════════════════════════════════════ -->
 <script>
 /* ── Preloader Dismiss Logic ──────────────────────────────────── */
 function hidePreloader() {
